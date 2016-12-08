@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Getting Started: Serving Web Content</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}" />
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap-theme.min.css}" />
+<link rel="stylesheet"
+	href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" />
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"
+	th:src="@{/webjars/jquery/1.11.1/jquery.min.js}"></script>
+<script
+	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.min.js}"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	$(document).ready(function() {
+		$('#sortdata').sortable({
+			update : function() {
+				//変更があった場合、この処理が呼ばれるので
+				//ここでサーバーと通信をおこないデータを保存する。
+			}
+		});
+	});
+
+	function orderChk() {
+		var table = document.getElementById("myTable");
+		var rows = table.rows.length;
+		for (var i = 0; i < rows; i++) {
+			var cell = table.rows[i].cells[0];
+			alert(i+"行目："+cell.innerHTML);
+		}
+	}
+
+	/*]]>*/
+</script>
+</head>
+<body>
+
+	<div class="container">
+
+		<h3>一覧画面</h3>
+		<form th:action="@{/reg}" method="post">
+			<input type="submit" class="btn btn-success" value="新規登録" />
+		</form>
+		<br /> <input type="button" class="btn btn-default btn-sm"
+			value="順序確認" onClick="orderChk()" /> <br /> <br />
+
+		<table class="table table-striped table-condensed" id="myTable">
+			<tr>
+				<th>商品名</th>
+				<th>価格</th>
+				<th colspan="2"></th>
+			</tr>
+			<tbody id="sortdata">
+				<tr th:each="food : ${foodModel}">
+					<td th:text="${food.name}">牛丼</td>
+					<td th:text="${food.price}">380</td>
+					<td>
+						<form th:action="@{/edit}" method="post">
+							<input class="btn btn-default btn-sm" type="submit" value="編集" />
+							<input type="hidden" name="id" th:value="${food.id}" />
+						</form>
+					</td>
+					<td>
+						<form th:action="@{/delete}" method="post">
+							<input class="btn btn-danger btn-sm" type="submit" value="削除" />
+							<input type="hidden" name="id" th:value="${food.id}" />
+						</form>
+					</td>
+				</tr>
+			</tbody>
+
+		</table>
+
+	</div>
+
+</body>
+</html>
